@@ -1,0 +1,10 @@
+{
+  "id": "techops-toolshop",
+  "name": "Tech Ops Toolshop",
+  "description": "Discovery and navigation hub for all Tech Ops Spreelets — browse tools, search by name or tag, and launch apps",
+  "icon": "layout-grid",
+  "version": "1.0.0",
+  "url": "https://techops-toolshop.kova.eks.prod.tk.dev",
+  "domain": "tech-ops",
+  "tags": ["toolshop", "discovery", "navigation", "launcher"]
+}

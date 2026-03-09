@@ -1,0 +1,164 @@
+{
+  "domain": "tech-ops",
+  "spreelets": [
+    {
+      "id": "pm-helper",
+      "name": "PM Helper",
+      "description": "Generate LTR snapshots, manage roadmaps, and track KPIs by team with data quality enforcement",
+      "icon": "clipboard-list",
+      "version": "1.0.0",
+      "url": "https://pm-helper.kova.eks.prod.tk.dev",
+      "domain": "tech-ops",
+      "tags": ["roadmap", "kpis", "snapshots", "teams", "data-quality"],
+      "surfaces": {
+        "card": {
+          "summaryEndpoint": "https://pm-helper.kova.eks.prod.tk.dev/api/summary",
+          "refreshInterval": 300
+        },
+        "spark": {
+          "component": "https://pm-helper.kova.eks.prod.tk.dev/spreelet-spark.js",
+          "preferredSurface": "panel",
+          "maxWidth": 520,
+          "maxHeight": 720
+        },
+        "full": {
+          "url": "https://pm-helper.kova.eks.prod.tk.dev",
+          "deepLinkParams": ["team", "view", "horizon"]
+        }
+      },
+      "entities": {
+        "owns": [
+          {
+            "domain": "teams",
+            "types": ["team", "person"],
+            "description": "Canonical team and person entities with alias resolution",
+            "schema": "entities/teams.schema.json"
+          },
+          {
+            "domain": "roadmap-items",
+            "types": ["roadmap-item", "epic"],
+            "description": "Roadmap items with horizon, impact, effort, and DQ scores",
+            "schema": "entities/roadmap-items.schema.json"
+          },
+          {
+            "domain": "snapshots",
+            "types": ["snapshot"],
+            "description": "LTR snapshots with narrative summaries and KPI aggregates"
+          }
+        ],
+        "uses": [
+          {
+            "domain": "issues",
+            "types": ["issue", "epic", "story"],
+            "source": "jira:PRDCT,SPREE,SPRT,STPSF"
+          },
+          {
+            "domain": "kpis",
+            "types": ["kpi"],
+            "source": "trino:mrt_jira__operations_metrics_report"
+          }
+        ]
+      },
+      "capabilities": ["entity-resolution", "export", "ai-generation"]
+    },
+    {
+      "id": "find-my-request",
+      "name": "Sightline",
+      "description": "Search for any Jira issue using natural language with AI-powered interpretation and status detail",
+      "icon": "search",
+      "version": "1.0.0",
+      "url": "https://find-my-request.kova.eks.prod.tk.dev",
+      "domain": "tech-ops",
+      "tags": ["search", "jira", "issues", "status"],
+      "surfaces": {
+        "spark": {
+          "component": "https://find-my-request.kova.eks.prod.tk.dev/spreelet-spark.js",
+          "preferredSurface": "modal",
+          "maxWidth": 480,
+          "maxHeight": 640
+        },
+        "full": {
+          "url": "https://find-my-request.kova.eks.prod.tk.dev",
+          "deepLinkParams": ["query", "issueKey", "teamHint"]
+        }
+      },
+      "entities": {
+        "owns": [
+          {
+            "domain": "issues",
+            "types": ["issue", "epic", "story"],
+            "description": "Jira issue search, status tracking, and risk assessment",
+            "schema": "entities/issues.schema.json"
+          }
+        ],
+        "uses": [
+          {
+            "domain": "teams",
+            "types": ["team"],
+            "source": "pm-helper"
+          },
+          {
+            "domain": "people",
+            "types": ["person"],
+            "source": "pm-helper"
+          }
+        ]
+      },
+      "capabilities": ["search", "entity-resolution"]
+    },
+    {
+      "id": "team-kpi-dashboard",
+      "name": "Team KPI Dashboard",
+      "description": "Sprint-over-sprint KPI matrix with work breakdown, estimates, and LTR report generation",
+      "icon": "bar-chart-3",
+      "version": "1.0.0",
+      "url": "https://team-kpi-dashboard.kova.eks.prod.tk.dev",
+      "domain": "tech-ops",
+      "tags": ["kpis", "sprints", "metrics", "teams", "ltr"],
+      "surfaces": {
+        "card": {
+          "summaryEndpoint": "https://team-kpi-dashboard.kova.eks.prod.tk.dev/api/summary",
+          "refreshInterval": 600
+        },
+        "spark": {
+          "component": "https://team-kpi-dashboard.kova.eks.prod.tk.dev/spreelet-spark.js",
+          "preferredSurface": "panel",
+          "maxWidth": 520,
+          "maxHeight": 720
+        },
+        "full": {
+          "url": "https://team-kpi-dashboard.kova.eks.prod.tk.dev",
+          "deepLinkParams": ["team", "sprint"]
+        }
+      },
+      "entities": {
+        "owns": [
+          {
+            "domain": "kpis",
+            "types": ["kpi", "sprint-metric"],
+            "description": "Sprint KPI metrics by team — EBITDA, story points, work breakdown, completion rates",
+            "schema": "entities/kpis.schema.json"
+          },
+          {
+            "domain": "estimates",
+            "types": ["estimate"],
+            "description": "Team-entered sprint estimates for goal tracking"
+          }
+        ],
+        "uses": [
+          {
+            "domain": "teams",
+            "types": ["team"],
+            "source": "pm-helper"
+          },
+          {
+            "domain": "issues",
+            "types": ["issue"],
+            "source": "trino:mrt_jira__operations_metrics_report"
+          }
+        ]
+      },
+      "capabilities": ["export", "ai-generation"]
+    }
+  ]
+}

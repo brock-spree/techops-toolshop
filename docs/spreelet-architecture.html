@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spreelet Architecture — Tech Ops Toolshop Ecosystem</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; padding: 32px; min-height: 100vh; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #f8fafc; }
+    .subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 40px; }
+    .diagrams { display: flex; flex-direction: column; gap: 64px; max-width: 1200px; margin: 0 auto; }
+    .section-title { font-size: 18px; font-weight: 600; color: #cbd5e1; margin-bottom: 24px; padding-bottom: 8px; border-bottom: 1px solid #334155; }
+
+    .layer-stack { display: flex; flex-direction: column; gap: 4px; }
+    .layer { display: flex; align-items: center; border-radius: 10px; padding: 16px 24px; transition: transform 0.15s ease; }
+    .layer:hover { transform: translateX(4px); }
+    .layer-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; width: 160px; flex-shrink: 0; }
+    .layer-content { font-size: 14px; color: #cbd5e1; flex: 1; }
+    .layer-content strong { color: #f8fafc; font-weight: 600; }
+    .layer-content .detail { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    .layer.toolshop { background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%); border: 1px solid #2563eb40; }
+    .layer.toolshop .layer-label { color: #60a5fa; }
+    .layer.skills { background: linear-gradient(135deg, #3b1e2e 0%, #1e293b 100%); border: 1px solid #ec489940; }
+    .layer.skills .layer-label { color: #f472b6; }
+    .layer.spreelet-kit { background: linear-gradient(135deg, #1e3b4f 0%, #1e293b 100%); border: 1px solid #06b6d440; }
+    .layer.spreelet-kit .layer-label { color: #22d3ee; }
+    .layer.spreeform { background: linear-gradient(135deg, #1e3b3f 0%, #1e293b 100%); border: 1px solid #10b98140; }
+    .layer.spreeform .layer-label { color: #34d399; }
+    .layer.infra { background: linear-gradient(135deg, #2d1e3b 0%, #1e293b 100%); border: 1px solid #8b5cf640; }
+    .layer.infra .layer-label { color: #a78bfa; }
+    .layer.data { background: linear-gradient(135deg, #3b2d1e 0%, #1e293b 100%); border: 1px solid #f59e0b40; }
+    .layer.data .layer-label { color: #fbbf24; }
+    .layer-arrow { text-align: center; color: #475569; font-size: 18px; padding: 2px 0; }
+
+    .surface-flow { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+    .surface-card { flex: 1; min-width: 240px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+    .surface-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .surface-card .badge { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px; margin-bottom: 12px; }
+    .surface-card p { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .surface-card ul { font-size: 13px; color: #94a3b8; line-height: 1.8; list-style: none; padding: 0; }
+    .surface-card ul li::before { content: "-> "; color: #64748b; }
+    .surface-card.card-surface { border-color: #3b82f620; }
+    .surface-card.card-surface .badge { background: #1e40af; color: #93c5fd; }
+    .surface-card.spark-surface { border-color: #f59e0b20; }
+    .surface-card.spark-surface .badge { background: #92400e; color: #fcd34d; }
+    .surface-card.full-surface { border-color: #10b98120; }
+    .surface-card.full-surface .badge { background: #065f46; color: #6ee7b7; }
+    .flow-arrow { display: flex; align-items: center; justify-content: center; font-size: 24px; color: #475569; min-width: 40px; padding-top: 40px; }
+
+    .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .arch-box { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+    .arch-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .arch-box h3 .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .arch-box .items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .arch-box .item { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: #0f172a; border: 1px solid #334155; color: #cbd5e1; }
+    .arch-box.shared .dot { background: #22d3ee; }
+    .arch-box.shared .item { border-color: #06b6d430; }
+    .arch-box.pm .dot { background: #f472b6; }
+    .arch-box.pm .item { border-color: #ec489930; }
+    .arch-box.fmr .dot { background: #60a5fa; }
+    .arch-box.fmr .item { border-color: #3b82f630; }
+    .arch-box.kpi .dot { background: #fbbf24; }
+    .arch-box.kpi .item { border-color: #f59e0b30; }
+
+    .lifecycle { display: flex; gap: 0; align-items: stretch; }
+    .phase { flex: 1; padding: 20px; position: relative; border-top: 3px solid; display: flex; flex-direction: column; }
+    .phase h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .phase .time { font-size: 11px; color: #64748b; margin-bottom: 12px; }
+    .phase p { font-size: 13px; color: #94a3b8; line-height: 1.5; flex: 1; }
+    .phase .output { margin-top: 12px; font-size: 12px; padding: 8px 12px; background: #0f172a; border-radius: 6px; color: #cbd5e1; }
+    .phase:nth-child(1) { border-color: #34d399; background: #064e3b20; }
+    .phase:nth-child(1) h3 { color: #34d399; }
+    .phase:nth-child(2) { border-color: #60a5fa; background: #1e40af20; }
+    .phase:nth-child(2) h3 { color: #60a5fa; }
+    .phase:nth-child(3) { border-color: #fbbf24; background: #78350f20; }
+    .phase:nth-child(3) h3 { color: #fbbf24; }
+    .phase:nth-child(4) { border-color: #a78bfa; background: #5b21b620; }
+    .phase:nth-child(4) h3 { color: #a78bfa; }
+    .phase-connector { position: absolute; right: -12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #475569; z-index: 1; }
+
+    .entity-diagram { display: flex; flex-direction: column; gap: 16px; }
+    .entity-row { display: flex; gap: 16px; align-items: stretch; }
+    .entity-app { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; flex: 1; min-width: 160px; }
+    .entity-app h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .entity-app .domains { display: flex; flex-wrap: wrap; gap: 4px; }
+    .entity-app .domain { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #0f172a; border: 1px solid #334155; }
+    .entity-app .domain.owns { border-color: #10b98140; color: #34d399; }
+    .entity-app .domain.reads { border-color: #64748b40; color: #94a3b8; font-style: italic; }
+    .entity-bus { background: #1e293b; border: 2px dashed #475569; border-radius: 10px; padding: 16px; text-align: center; margin: 0 20px; }
+    .entity-bus h4 { font-size: 13px; color: #94a3b8; font-weight: 500; }
+    .entity-bus .timeline { display: flex; justify-content: center; gap: 24px; margin-top: 8px; flex-wrap: wrap; }
+    .entity-bus .timeline .stage { font-size: 11px; color: #64748b; }
+    .entity-bus .timeline .stage.active { color: #34d399; font-weight: 600; }
+
+    .build-flow { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+    .build-step { flex: 1; min-width: 180px; background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 16px; text-align: center; }
+    .build-step h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+    .build-step p { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+    .build-step.source { border-color: #8b5cf640; }
+    .build-step.source h4 { color: #a78bfa; }
+    .build-step.plugin { border-color: #ec489940; }
+    .build-step.plugin h4 { color: #f472b6; }
+    .build-step.output { border-color: #10b98140; }
+    .build-step.output h4 { color: #34d399; }
+    .build-step.toolshop-step { border-color: #3b82f640; }
+    .build-step.toolshop-step h4 { color: #60a5fa; }
+    .build-arrow { display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569; min-width: 30px; }
+
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .surface-flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); padding: 0; min-width: unset; }
+      .arch-grid { grid-template-columns: 1fr; }
+      .lifecycle { flex-direction: column; }
+      .phase-connector { display: none; }
+      .entity-row { flex-direction: column; }
+      .build-flow { flex-direction: column; }
+      .build-arrow { transform: rotate(90deg); }
+      .layer-label { width: 120px; font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Spreelet Architecture</h1>
+  <p class="subtitle">Tech Ops Toolshop — layers, surfaces, components, lifecycle, entities, and build enforcement</p>
+
+  <div class="diagrams">
+
+    <section>
+      <div class="section-title">1. Design System Layer Model</div>
+      <div class="layer-stack">
+        <div class="layer toolshop">
+          <div class="layer-label">Tech Ops Toolshop</div>
+          <div class="layer-content">
+            <strong>Domain-scoped container</strong> — Registry reader, Spreelet Card grid, Spark Launcher, auth context
+            <div class="detail">Parameterized by TOOLSHOP_DOMAIN. One codebase, multiple domain instances. Reads spreelet.json manifests.</div>
+          </div>
+        </div>
+        <div class="layer-arrow">&darr;</div>
+        <div class="layer skills">
+          <div class="layer-label">Plugin Skills</div>
+          <div class="layer-content">
+            <strong>Build-time enforcement</strong> — spreelet-patterns (creation guide), spreelet-readiness (audit + fix), entity-domain (modeling)
+            <div class="detail">Lives in tech-ops plugin. Used by App Builder + Claude Code. Standards flow through the build process.</div>
+          </div>
+        </div>
+        <div class="layer-arrow">&darr;</div>
+        <div class="layer spreelet-kit">
+          <div class="layer-label">Spreelet Kit</div>
+          <div class="layer-content">
+            <strong>Shared TechOps patterns</strong> — StatusCapsule, FreshnessIndicator, ConfidenceBadge, TrendSparkline, EntityPill, EditableCell, SkeletonLoader, ErrorBanner, EmptyState
+            <div class="detail">Domain-specific color tokens (DQ, freshness, confidence, trends, entities). Layout conventions. Interaction patterns.</div>
+          </div>
+        </div>
+        <div class="layer-arrow">&darr;</div>
+        <div class="layer spreeform">
+          <div class="layer-label">Spreeform</div>
+          <div class="layer-content">
+            <strong>Design system foundation</strong> — Atoms (Button, Input, Card, Dialog, Table...) + Blocks (Sidebar, Page, FlexTable, ThemeToggle)
+            <div class="detail">Built on Radix UI + Tailwind CSS. ~60 atom components, 6 block components. Themed via CSS variables.</div>
+          </div>
+        </div>
+        <div class="layer-arrow">&darr;</div>
+        <div class="layer infra">
+          <div class="layer-label">App Framework</div>
+          <div class="layer-content">
+            <strong>TanStack ecosystem</strong> — TanStack Start (SSR + Server Functions) + Router (file-based) + React Query (data fetching)
+            <div class="detail">React 19, TypeScript, Vite, Nitro backend, Bun runtime, Zod validation.</div>
+          </div>
+        </div>
+        <div class="layer-arrow">&darr;</div>
+        <div class="layer data">
+          <div class="layer-label">Data Platform</div>
+          <div class="layer-content">
+            <strong>Trino / Starburst Galaxy</strong> (read-only analytics) + <strong>PostgreSQL</strong> (per-app state, entities)
+            <div class="detail">Server functions to Trino for warehouse queries. Postgres for entities, config, telemetry. Standardized entity schema.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">2. The Three Surfaces — Card &rarr; Spark &rarr; Full App</div>
+      <div class="surface-flow">
+        <div class="surface-card card-surface">
+          <span class="badge">Spreelet Card</span>
+          <h3>Auto-Generated (No Code)</h3>
+          <p>Browsing state in the Toolshop grid. Rendered entirely from spreelet.json manifest metadata.</p>
+          <ul>
+            <li>Name + icon + description + tags</li>
+            <li>Optional live summary endpoint</li>
+            <li>"Open" + "Launch Spark" CTAs</li>
+            <li>Zero Spreelet code required</li>
+          </ul>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="surface-card spark-surface">
+          <span class="badge">Spreelet Spark</span>
+          <h3>Plug-and-Play Component</h3>
+          <p>Focused use in modal, panel, or embedded context. Built by author using Spreelet Kit templates. Web Component for portability.</p>
+          <ul>
+            <li>Core functionality only</li>
+            <li>No navigation chrome</li>
+            <li>"Go to full app" deep-link</li>
+            <li>Embeddable on intranet / other apps</li>
+          </ul>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="surface-card full-surface">
+          <span class="badge">Full App</span>
+          <h3>Standalone Experience</h3>
+          <p>Complete app at its own URL. All features, full navigation. Works independently of the Toolshop.</p>
+          <ul>
+            <li>All features and admin</li>
+            <li>Full navigation (Spreeform Sidebar)</li>
+            <li>Deep-link from Spark state</li>
+            <li>Independently deployable on Kova</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">3. Shared vs. App-Specific Components (Initial 3 Spreelets)</div>
+      <div class="arch-grid">
+        <div class="arch-box shared">
+          <h3><span class="dot"></span> Spreelet Kit (Shared)</h3>
+          <div class="items">
+            <span class="item">StatusCapsule</span>
+            <span class="item">FreshnessIndicator</span>
+            <span class="item">ConfidenceBadge</span>
+            <span class="item">TrendSparkline</span>
+            <span class="item">EntityPill</span>
+            <span class="item">EditableCell</span>
+            <span class="item">SkeletonLoader</span>
+            <span class="item">ErrorBanner</span>
+            <span class="item">EmptyState</span>
+            <span class="item">DQ tokens</span>
+            <span class="item">Freshness tokens</span>
+            <span class="item">Confidence tokens</span>
+            <span class="item">Trend tokens</span>
+            <span class="item">Entity type colors</span>
+          </div>
+        </div>
+        <div class="arch-box fmr">
+          <h3><span class="dot"></span> Find My Request</h3>
+          <div class="items">
+            <span class="item">CandidateCard</span>
+            <span class="item">InterpretationBar</span>
+            <span class="item">RefinementChips</span>
+            <span class="item">StatusDetailPanel</span>
+            <span class="item">ActionBanner</span>
+            <span class="item">OwnershipRibbon</span>
+            <span class="item">RiskBadge</span>
+          </div>
+        </div>
+        <div class="arch-box pm">
+          <h3><span class="dot"></span> PM Helper</h3>
+          <div class="items">
+            <span class="item">SnapshotBuilder</span>
+            <span class="item">RoadmapTable</span>
+            <span class="item">KPITile</span>
+            <span class="item">DQPanel</span>
+            <span class="item">NarrativeEditor</span>
+            <span class="item">ImportWizard</span>
+            <span class="item">RollupScheduler</span>
+            <span class="item">PersonaSelector</span>
+          </div>
+        </div>
+        <div class="arch-box kpi">
+          <h3><span class="dot"></span> Team KPI Dashboard</h3>
+          <div class="items">
+            <span class="item">KpiMatrix</span>
+            <span class="item">ConversationPanel (LTR)</span>
+            <span class="item">ReportPreview (LTR)</span>
+            <span class="item">TeamSelector</span>
+            <span class="item">SprintColumns</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">4. Spreelet Lifecycle — Create &rarr; Surface &rarr; Enhance &rarr; Converge</div>
+      <div class="lifecycle">
+        <div class="phase">
+          <h3>Create</h3>
+          <div class="time">Minutes</div>
+          <p>Build with App Builder or Claude Code + tech-ops plugin. spreelet-patterns skill guides creation.</p>
+          <div class="output">Output: Working app on Kova</div>
+          <span class="phase-connector">&rarr;</span>
+        </div>
+        <div class="phase">
+          <h3>Surface</h3>
+          <div class="time">5 minutes</div>
+          <p>Add spreelet.json manifest. spreelet-readiness skill generates it. Card appears in Toolshop automatically.</p>
+          <div class="output">Output: Visible in Toolshop</div>
+          <span class="phase-connector">&rarr;</span>
+        </div>
+        <div class="phase">
+          <h3>Enhance</h3>
+          <div class="time">Hours to days</div>
+          <p>Build Spark component. Adopt Spreelet Kit. Declare entity domains. Run spreelet-readiness audit.</p>
+          <div class="output">Output: Card + Spark + Entities</div>
+          <span class="phase-connector">&rarr;</span>
+        </div>
+        <div class="phase">
+          <h3>Converge</h3>
+          <div class="time">Ongoing</div>
+          <p>Overlapping tools merge organically. Best patterns adopted. Usage data guides decisions.</p>
+          <div class="output">Output: Refined ecosystem</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">5. Entity Federation — Manifest-Driven Domain Ownership</div>
+      <div class="entity-diagram">
+        <div class="entity-row">
+          <div class="entity-app">
+            <h4>PM Helper</h4>
+            <div class="domains">
+              <span class="domain owns">teams (owns)</span>
+              <span class="domain owns">people (owns)</span>
+              <span class="domain owns">snapshots (owns)</span>
+              <span class="domain owns">roadmap-items (owns)</span>
+              <span class="domain reads">issues (uses)</span>
+            </div>
+          </div>
+          <div class="entity-app">
+            <h4>Find My Request</h4>
+            <div class="domains">
+              <span class="domain owns">issues (owns)</span>
+              <span class="domain reads">teams (uses)</span>
+              <span class="domain reads">people (uses)</span>
+            </div>
+          </div>
+          <div class="entity-app">
+            <h4>Team KPI Dashboard</h4>
+            <div class="domains">
+              <span class="domain owns">kpis (owns)</span>
+              <span class="domain owns">estimates (owns)</span>
+              <span class="domain reads">teams (uses)</span>
+              <span class="domain reads">sprints (uses)</span>
+            </div>
+          </div>
+        </div>
+        <div class="entity-bus">
+          <h4>Entity Registry (entity-registry.yaml) — Aggregated from Spreelet Manifests</h4>
+          <div class="timeline">
+            <span class="stage active">V1: Same schema, separate DBs, registry documents ownership</span>
+            <span class="stage">V2: Read-only entity APIs between apps</span>
+            <span class="stage">V3: Coordination service + sync</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">6. Build-Process Enforcement — Standards Flow Through the Plugin</div>
+      <div class="build-flow">
+        <div class="build-step source">
+          <h4>App Builder / Claude Code</h4>
+          <p>Author starts building a TechOps app</p>
+        </div>
+        <div class="build-arrow">&rarr;</div>
+        <div class="build-step plugin">
+          <h4>Tech-Ops Plugin</h4>
+          <p>spreelet-patterns guides creation. Spreeform + Spreelet Kit applied. Entity domains modeled.</p>
+        </div>
+        <div class="build-arrow">&rarr;</div>
+        <div class="build-step output">
+          <h4>Spreelet + Manifest</h4>
+          <p>App with spreelet.json, Spark surface, entity declarations, consistent UX.</p>
+        </div>
+        <div class="build-arrow">&rarr;</div>
+        <div class="build-step toolshop-step">
+          <h4>Tech Ops Toolshop</h4>
+          <p>Card auto-generated. Spark loadable. Entity registry updated.</p>
+        </div>
+      </div>
+      <div style="margin-top: 16px; padding: 12px 16px; background: #1e293b; border: 1px dashed #475569; border-radius: 8px; font-size: 13px; color: #94a3b8;">
+        <strong style="color: #f472b6;">Retrofit path:</strong> Existing apps run <code style="color: #22d3ee;">spreelet-readiness</code> skill &rarr; audit report &rarr; fix issues &rarr; generate manifest &rarr; appear in Toolshop
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
