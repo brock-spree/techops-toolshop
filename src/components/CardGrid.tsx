@@ -1,13 +1,14 @@
 import { Skeleton } from '@spreetail/spreeform'
 import { SpreeletCard } from './SpreeletCard'
-import type { SpreeletManifest } from '../types/manifest'
+import type { ResolvedManifest } from '../types/manifest'
 
 interface CardGridProps {
-  spreelets: SpreeletManifest[]
+  spreelets: ResolvedManifest[]
   isLoading?: boolean
+  onQuickOpen?: (resolved: ResolvedManifest) => void
 }
 
-export function CardGrid({ spreelets, isLoading }: CardGridProps) {
+export function CardGrid({ spreelets, isLoading, onQuickOpen }: CardGridProps) {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -43,12 +44,18 @@ export function CardGrid({ spreelets, isLoading }: CardGridProps) {
     )
   }
 
-  const sorted = [...spreelets].sort((a, b) => a.name.localeCompare(b.name))
+  const sorted = [...spreelets].sort((a, b) =>
+    a.manifest.name.localeCompare(b.manifest.name),
+  )
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {sorted.map((manifest) => (
-        <SpreeletCard key={manifest.id} manifest={manifest} />
+      {sorted.map((resolved) => (
+        <SpreeletCard
+          key={resolved.manifest.id}
+          resolved={resolved}
+          onQuickOpen={onQuickOpen}
+        />
       ))}
     </div>
   )

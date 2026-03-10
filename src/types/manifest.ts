@@ -55,10 +55,45 @@ export const SpreeletManifestSchema = z.object({
 
 export type SpreeletManifest = z.infer<typeof SpreeletManifestSchema>
 
-// Registry shape
+// Registry entry — points to a manifest URL, with optional inline fallback
+export const RegistryEntrySchema = z.object({
+  id: z.string(),
+  manifestUrl: z.string().url(),
+  fallback: SpreeletManifestSchema.optional(),
+})
+
+export type RegistryEntry = z.infer<typeof RegistryEntrySchema>
+
+// Registry shape (source file)
 export const RegistrySchema = z.object({
   domain: z.string(),
-  spreelets: z.array(SpreeletManifestSchema),
+  spreelets: z.array(RegistryEntrySchema),
 })
 
 export type Registry = z.infer<typeof RegistrySchema>
+
+// Resolved manifest with fetch metadata
+export interface ResolvedManifest {
+  manifest: SpreeletManifest
+  source: 'live' | 'fallback'
+  error?: string
+}
+
+// Resolved registry returned to the client
+export interface ResolvedRegistry {
+  domain: string
+  spreelets: ResolvedManifest[]
+}
+
+// Summary endpoint response
+export const CardSummarySchema = z.object({
+  items: z.array(
+    z.object({
+      label: z.string(),
+      value: z.string(),
+    }),
+  ),
+  updatedAt: z.string().optional(),
+})
+
+export type CardSummary = z.infer<typeof CardSummarySchema>

@@ -1,10 +1,12 @@
+import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { getRegistry } from '../server/registry'
 import { ToolshopHeader } from '../components/ToolshopHeader'
 import { CardGrid } from '../components/CardGrid'
-import type { SpreeletManifest } from '../types/manifest'
+import { SparkLauncher } from '../components/SparkLauncher'
+import type { ResolvedManifest } from '../types/manifest'
 
 const searchSchema = z.object({
   search: z.string().optional().catch(undefined),
@@ -16,21 +18,22 @@ export const Route = createFileRoute('/')({
 })
 
 function filterSpreelets(
-  spreelets: SpreeletManifest[],
+  spreelets: ResolvedManifest[],
   search: string,
-): SpreeletManifest[] {
+): ResolvedManifest[] {
   const term = search.toLowerCase()
   return spreelets.filter(
     (s) =>
-      s.name.toLowerCase().includes(term) ||
-      s.description.toLowerCase().includes(term) ||
-      s.tags.some((t) => t.toLowerCase().includes(term)),
+      s.manifest.name.toLowerCase().includes(term) ||
+      s.manifest.description.toLowerCase().includes(term) ||
+      s.manifest.tags.some((t) => t.toLowerCase().includes(term)),
   )
 }
 
 function HomePage() {
   const { search } = Route.useSearch()
   const navigate = Route.useNavigate()
+  const [sparkTarget, setSparkTarget] = useState<ResolvedManifest | null>(null)
 
   const { data: registry, isLoading } = useQuery({
     queryKey: ['registry'],
@@ -50,8 +53,16 @@ function HomePage() {
         }
       />
       <main className="mx-auto max-w-5xl px-6 py-8">
-        <CardGrid spreelets={filtered} isLoading={isLoading} />
+        <CardGrid
+          spreelets={filtered}
+          isLoading={isLoading}
+          onQuickOpen={setSparkTarget}
+        />
       </main>
+      <SparkLauncher
+        resolved={sparkTarget}
+        onClose={() => setSparkTarget(null)}
+      />
     </div>
   )
 }

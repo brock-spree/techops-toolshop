@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { SpreeletManifestSchema, RegistrySchema } from '../types/manifest'
+import {
+  SpreeletManifestSchema,
+  RegistrySchema,
+  CardSummarySchema,
+} from '../types/manifest'
 import registryData from '../data/registry.json'
 
 describe('SpreeletManifestSchema', () => {
@@ -91,17 +95,52 @@ describe('SpreeletManifestSchema', () => {
 })
 
 describe('RegistrySchema', () => {
-  it('validates the static registry.json', () => {
+  it('validates the static registry.json with entry format', () => {
     const result = RegistrySchema.parse(registryData)
     expect(result.domain).toBe('tech-ops')
     expect(result.spreelets).toHaveLength(3)
   })
 
+  it('each entry has manifestUrl and fallback', () => {
+    const result = RegistrySchema.parse(registryData)
+    for (const entry of result.spreelets) {
+      expect(entry.manifestUrl).toMatch(/^https?:\/\//)
+      expect(entry.fallback).toBeDefined()
+      expect(entry.fallback!.id).toBe(entry.id)
+    }
+  })
+
   it('contains all expected Spreelets', () => {
     const result = RegistrySchema.parse(registryData)
     const ids = result.spreelets.map((s) => s.id)
-    expect(ids).toContain('pm-helper')
-    expect(ids).toContain('find-my-request')
-    expect(ids).toContain('team-kpi-dashboard')
+    expect(ids).toContain('keystone')
+    expect(ids).toContain('sightline')
+    expect(ids).toContain('left-to-right')
+  })
+})
+
+describe('CardSummarySchema', () => {
+  it('validates a valid summary response', () => {
+    const summary = {
+      items: [
+        { label: 'Pending snapshots', value: '3' },
+        { label: 'Last generated', value: '2h ago' },
+      ],
+      updatedAt: '2026-03-09T12:00:00Z',
+    }
+    const result = CardSummarySchema.parse(summary)
+    expect(result.items).toHaveLength(2)
+    expect(result.updatedAt).toBeDefined()
+  })
+
+  it('allows summary without updatedAt', () => {
+    const summary = {
+      items: [{ label: 'Active users', value: '12' }],
+    }
+    expect(CardSummarySchema.parse(summary).items).toHaveLength(1)
+  })
+
+  it('rejects summary with missing items', () => {
+    expect(() => CardSummarySchema.parse({})).toThrow()
   })
 })
