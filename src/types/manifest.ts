@@ -11,19 +11,19 @@ const EntityDomainSchema = z.object({
 
 // Surface definitions
 const CardSurfaceSchema = z.object({
-  summaryEndpoint: z.string().url(),
+  summaryEndpoint: z.string(), // Absolute or relative — resolved against manifest source
   refreshInterval: z.number().positive(),
 })
 
 const SparkSurfaceSchema = z.object({
-  component: z.string().url(),
+  component: z.string(), // Absolute or relative — resolved against manifest source
   preferredSurface: z.enum(['modal', 'panel']),
   maxWidth: z.number().positive(),
   maxHeight: z.number().positive(),
 })
 
 const FullSurfaceSchema = z.object({
-  url: z.string().url(),
+  url: z.string(), // Absolute or relative — resolved against manifest source
   deepLinkParams: z.array(z.string()).optional(),
 })
 
@@ -45,7 +45,7 @@ export const SpreeletManifestSchema = z.object({
   description: z.string(),
   icon: z.string(),
   version: z.string(),
-  url: z.string().url(),
+  url: z.string(), // Absolute or relative — resolved against manifest source
   domain: z.string(),
   tags: z.array(z.string()),
   surfaces: SurfacesSchema.optional(),

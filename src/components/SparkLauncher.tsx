@@ -41,7 +41,8 @@ export function SparkLauncher({ resolved, onClose }: SparkLauncherProps) {
 
     const script = document.createElement('script')
     script.src = spark.component
-    script.type = 'module'
+    // Use classic script (not module) so document.currentScript is available
+    // during execution — sparks use it to detect their app's base URL
     script.onload = () => {
       if (!containerRef.current) return
 
