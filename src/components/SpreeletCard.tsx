@@ -93,7 +93,7 @@ export function SpreeletCard({ resolved, onQuickOpen }: SpreeletCardProps) {
             <ArrowRight className="ml-1 h-4 w-4" />
           </a>
         </Button>
-        {hasSpark && onQuickOpen && (
+        {hasSpark && onQuickOpen && source === 'live' && (
           <Button
             variant="outline"
             size="sm"
