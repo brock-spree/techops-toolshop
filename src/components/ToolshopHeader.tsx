@@ -13,7 +13,7 @@ export function ToolshopHeader({ search, onSearchChange }: ToolshopHeaderProps) 
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-semibold text-foreground whitespace-nowrap">
-            Tech Ops Toolshop
+            Tech Optics Toolshop
           </h1>
           <Link
             to="/about"
