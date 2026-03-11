@@ -1,0 +1,38 @@
+{
+  "sessionId": "825cede3-867e-48fd-90eb-ec1f1ecdd2cd",
+  "model": "claude-sonnet-4-5",
+  "mcpServers": [
+    {
+      "name": "plugin:kova:data-catalog",
+      "status": "connected"
+    },
+    {
+      "name": "plugin:meeting-intelligence:meeting-search",
+      "status": "connected"
+    },
+    {
+      "name": "plugin:code-intelligence:sourcegraph",
+      "status": "connected"
+    },
+    {
+      "name": "plugin:meeting-intelligence:read-ai",
+      "status": "failed"
+    },
+    {
+      "name": "plugin:code-intelligence:engineering-ai-agent",
+      "status": "failed"
+    },
+    {
+      "name": "memory",
+      "status": "connected"
+    }
+  ],
+  "plugins": [
+    "kova",
+    "tech-ops",
+    "code-intelligence",
+    "meeting-intelligence"
+  ],
+  "toolCount": 44,
+  "timestamp": "2026-03-11T06:40:27.158Z"
+}

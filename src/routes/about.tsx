@@ -31,7 +31,7 @@ const SUITE_APPS = [
       'Cross-team visibility into sprints, blockers, and delivery health. Surfaces the work that matters across all teams.',
     icon: Telescope,
     status: 'live' as const,
-    step: 'Finds the Work',
+    step: 'Understand the Work',
   },
   {
     name: 'Prism',
@@ -40,7 +40,7 @@ const SUITE_APPS = [
       'Stakeholder communications, roadmap management, and exploring points and EBITDA impact. Organizes chaos into clarity.',
     icon: Diamond,
     status: 'live' as const,
-    step: 'Organizes Roadmaps',
+    step: 'Align Priorities',
   },
   {
     name: 'Array',
@@ -49,7 +49,7 @@ const SUITE_APPS = [
       'KPI matrices, trend analysis, and work breakdown tracking. Reveals patterns that drive better decisions.',
     icon: LayoutGrid,
     status: 'live' as const,
-    step: 'Monitors Progress',
+    step: 'Data-Driven Improvement',
   },
   {
     name: 'Focal',
@@ -58,7 +58,7 @@ const SUITE_APPS = [
       'Individual focus, burnout signals, and growth tracking. Because great products are built by supported people.',
     icon: UserRoundSearch,
     status: 'planned' as const,
-    step: 'Coaches the People',
+    step: 'Grow & Develop our People',
   },
 ]
 
@@ -105,17 +105,17 @@ function AboutPage() {
             </Badge>
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Optical Suite
+            Tech Optics
           </h1>
           <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-            Turn Jira and GitLab noise into clear, actionable signal.
+            Turn noisy data from Jira, GitLab, ReadAI, Teams, Email, and other
+            tech tools into clear, actionable signal.
           </p>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            The Optical Suite is a set of intelligence tools built for Product
-            and Engineering leadership. Each tool focuses on a distinct stage of
-            the delivery lifecycle, working together to provide unified
-            definition, adaptive deployment, and deep intelligence across your
-            organization.
+            The Tech Optics Suite is a set of Spreelets built for Product,
+            Engineering, and Tech leaders across Spreetail. Each tool focuses on
+            a distinct portion of the delivery lifecycle, working together to
+            provide deep intelligence across Spreetail.
           </p>
         </section>
 
@@ -191,9 +191,9 @@ function AboutPage() {
             How It Works
           </h2>
           <p className="mb-6 text-sm text-muted-foreground">
-            The Toolshop is a unified access layer. Every tool in the Optical
-            Suite can appear in up to three surfaces, giving you the right level
-            of detail for the moment.
+            The Toolshop is a unified access layer. Every tool in the Tech
+            Optics Suite can appear in up to three surfaces, giving you the
+            right level of detail for the moment.
           </p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {SURFACES.map((surface) => {
