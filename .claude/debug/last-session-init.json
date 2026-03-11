@@ -7,11 +7,11 @@
       "status": "connected"
     },
     {
-      "name": "plugin:meeting-intelligence:meeting-search",
+      "name": "plugin:code-intelligence:sourcegraph",
       "status": "connected"
     },
     {
-      "name": "plugin:code-intelligence:sourcegraph",
+      "name": "plugin:meeting-intelligence:meeting-search",
       "status": "connected"
     },
     {
@@ -34,5 +34,5 @@
     "meeting-intelligence"
   ],
   "toolCount": 44,
-  "timestamp": "2026-03-11T07:18:33.933Z"
+  "timestamp": "2026-03-11T07:21:17.448Z"
 }
