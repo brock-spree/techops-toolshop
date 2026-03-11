@@ -2,30 +2,30 @@
   "domain": "tech-ops",
   "spreelets": [
     {
-      "id": "pm-helper",
-      "manifestUrl": "https://pm-helper.kova.eks.prod.tk.dev/.well-known/spreelet.json",
+      "id": "prism",
+      "manifestUrl": "http://localhost:3001/.well-known/spreelet.json",
       "fallback": {
-        "id": "pm-helper",
-        "name": "PM Helper",
-        "description": "Generate LTR snapshots, manage roadmaps, and track KPIs by team with data quality enforcement",
-        "icon": "clipboard-list",
-        "version": "1.0.0",
-        "url": "https://pm-helper.kova.eks.prod.tk.dev",
+        "id": "prism",
+        "name": "Prism",
+        "description": "Generate stakeholder comms, manage roadmaps, explore KPIs, and improve data quality",
+        "icon": "compass",
+        "version": "1.1.0",
+        "url": "http://localhost:3001",
         "domain": "tech-ops",
-        "tags": ["roadmap", "kpis", "snapshots", "teams", "data-quality"],
+        "tags": ["stakeholder-comms", "roadmap", "kpis", "data-quality", "teams"],
         "surfaces": {
           "card": {
-            "summaryEndpoint": "https://pm-helper.kova.eks.prod.tk.dev/api/summary",
+            "summaryEndpoint": "http://localhost:3001/api/summary",
             "refreshInterval": 300
           },
           "spark": {
-            "component": "https://pm-helper.kova.eks.prod.tk.dev/spreelet-spark.js",
+            "component": "http://localhost:3001/spreelet-spark.js",
             "preferredSurface": "panel",
             "maxWidth": 520,
             "maxHeight": 720
           },
           "full": {
-            "url": "https://pm-helper.kova.eks.prod.tk.dev",
+            "url": "http://localhost:3001",
             "deepLinkParams": ["team", "view", "horizon"]
           }
         },
@@ -66,26 +66,26 @@
       }
     },
     {
-      "id": "find-my-request",
-      "manifestUrl": "https://find-my-request.kova.eks.prod.tk.dev/.well-known/spreelet.json",
+      "id": "sightline",
+      "manifestUrl": "http://localhost:3002/.well-known/spreelet.json",
       "fallback": {
-        "id": "find-my-request",
+        "id": "sightline",
         "name": "Sightline",
-        "description": "Search for any Jira issue using natural language with AI-powered interpretation and status detail",
+        "description": "Search for any Jira issue using natural language with AI-powered entity resolution and status detail",
         "icon": "search",
-        "version": "1.0.0",
-        "url": "https://find-my-request.kova.eks.prod.tk.dev",
+        "version": "1.1.0",
+        "url": "http://localhost:3002",
         "domain": "tech-ops",
-        "tags": ["search", "jira", "issues", "status"],
+        "tags": ["search", "jira", "issues", "status", "natural-language"],
         "surfaces": {
           "spark": {
-            "component": "https://find-my-request.kova.eks.prod.tk.dev/spreelet-spark.js",
+            "component": "http://localhost:3002/spreelet-spark.js",
             "preferredSurface": "modal",
             "maxWidth": 480,
             "maxHeight": 640
           },
           "full": {
-            "url": "https://find-my-request.kova.eks.prod.tk.dev",
+            "url": "http://localhost:3002",
             "deepLinkParams": ["query", "issueKey", "teamHint"]
           }
         },
@@ -102,12 +102,12 @@
             {
               "domain": "teams",
               "types": ["team"],
-              "source": "pm-helper"
+              "source": "prism"
             },
             {
               "domain": "people",
               "types": ["person"],
-              "source": "pm-helper"
+              "source": "prism"
             }
           ]
         },
@@ -115,30 +115,30 @@
       }
     },
     {
-      "id": "team-kpi-dashboard",
-      "manifestUrl": "https://team-kpi-dashboard.kova.eks.prod.tk.dev/.well-known/spreelet.json",
+      "id": "array",
+      "manifestUrl": "http://localhost:3003/.well-known/spreelet.json",
       "fallback": {
-        "id": "team-kpi-dashboard",
-        "name": "Team KPI Dashboard",
-        "description": "Sprint-over-sprint KPI matrix with work breakdown, estimates, and LTR report generation",
+        "id": "array",
+        "name": "Array",
+        "description": "Sprint-over-sprint KPI matrix with work breakdown, estimates, and AI-generated LTR reports",
         "icon": "bar-chart-3",
-        "version": "1.0.0",
-        "url": "https://team-kpi-dashboard.kova.eks.prod.tk.dev",
+        "version": "1.1.0",
+        "url": "http://localhost:3003",
         "domain": "tech-ops",
         "tags": ["kpis", "sprints", "metrics", "teams", "ltr"],
         "surfaces": {
           "card": {
-            "summaryEndpoint": "https://team-kpi-dashboard.kova.eks.prod.tk.dev/api/summary",
+            "summaryEndpoint": "http://localhost:3003/api/summary",
             "refreshInterval": 600
           },
           "spark": {
-            "component": "https://team-kpi-dashboard.kova.eks.prod.tk.dev/spreelet-spark.js",
+            "component": "http://localhost:3003/spreelet-spark.js",
             "preferredSurface": "panel",
             "maxWidth": 520,
             "maxHeight": 720
           },
           "full": {
-            "url": "https://team-kpi-dashboard.kova.eks.prod.tk.dev",
+            "url": "http://localhost:3003",
             "deepLinkParams": ["team", "sprint"]
           }
         },
@@ -160,7 +160,7 @@
             {
               "domain": "teams",
               "types": ["team"],
-              "source": "pm-helper"
+              "source": "prism"
             },
             {
               "domain": "issues",

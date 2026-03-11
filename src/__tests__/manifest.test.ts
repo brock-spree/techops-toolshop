@@ -113,9 +113,9 @@ describe('RegistrySchema', () => {
   it('contains all expected Spreelets', () => {
     const result = RegistrySchema.parse(registryData)
     const ids = result.spreelets.map((s) => s.id)
-    expect(ids).toContain('keystone')
+    expect(ids).toContain('prism')
     expect(ids).toContain('sightline')
-    expect(ids).toContain('left-to-right')
+    expect(ids).toContain('array')
   })
 })
 
