@@ -3,7 +3,7 @@
   "spreelets": [
     {
       "id": "prism",
-      "manifestUrl": "http://localhost:3001/.well-known/spreelet.json",
+      "manifestUrl": "https://tech-ops-app-rev-app-cb72e271.kova.eks.dev01.tk.dev/.well-known/spreelet.json",
       "fallback": {
         "id": "prism",
         "name": "Prism",
@@ -67,7 +67,7 @@
     },
     {
       "id": "sightline",
-      "manifestUrl": "http://localhost:3002/.well-known/spreelet.json",
+      "manifestUrl": "https://tech-ops-app-rev-app-15f82ddb.kova.eks.dev01.tk.dev/.well-known/spreelet.json",
       "fallback": {
         "id": "sightline",
         "name": "Sightline",
@@ -116,7 +116,7 @@
     },
     {
       "id": "array",
-      "manifestUrl": "http://localhost:3003/.well-known/spreelet.json",
+      "manifestUrl": "https://feat-tech-ops-data-app-9.kova.eks.dev01.tk.dev/.well-known/spreelet.json",
       "fallback": {
         "id": "array",
         "name": "Array",
@@ -166,6 +166,58 @@
               "domain": "issues",
               "types": ["issue"],
               "source": "trino:mrt_jira__operations_metrics_report"
+            }
+          ]
+        },
+        "capabilities": ["export", "ai-generation"]
+      }
+    },
+    {
+      "id": "focal",
+      "manifestUrl": "https://tech-ops-app-rev-app-8c7f2b08.kova.eks.dev01.tk.dev/.well-known/spreelet.json",
+      "fallback": {
+        "id": "focal",
+        "name": "Focal",
+        "description": "Individual focus, burnout signals, and growth tracking for engineering teams",
+        "icon": "user-round-search",
+        "version": "1.0.0",
+        "url": "https://tech-ops-app-rev-app-8c7f2b08.kova.eks.dev01.tk.dev",
+        "domain": "tech-ops",
+        "tags": ["people", "burnout", "growth", "focus", "health"],
+        "surfaces": {
+          "card": {
+            "summaryEndpoint": "https://tech-ops-app-rev-app-8c7f2b08.kova.eks.dev01.tk.dev/api/summary",
+            "refreshInterval": 600
+          },
+          "spark": {
+            "component": "https://tech-ops-app-rev-app-8c7f2b08.kova.eks.dev01.tk.dev/spreelet-spark.js",
+            "preferredSurface": "panel",
+            "maxWidth": 520,
+            "maxHeight": 720
+          },
+          "full": {
+            "url": "https://tech-ops-app-rev-app-8c7f2b08.kova.eks.dev01.tk.dev",
+            "deepLinkParams": ["person", "team", "view"]
+          }
+        },
+        "entities": {
+          "owns": [
+            {
+              "domain": "people",
+              "types": ["person", "team-member"],
+              "description": "Individual contributor focus, workload, and growth signals"
+            }
+          ],
+          "uses": [
+            {
+              "domain": "teams",
+              "types": ["team"],
+              "source": "prism"
+            },
+            {
+              "domain": "issues",
+              "types": ["issue"],
+              "source": "jira:PRDCT,SPREE,SPRT,STPSF"
             }
           ]
         },
