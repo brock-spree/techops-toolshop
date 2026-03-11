@@ -58,11 +58,5 @@
   "clientDataCache": {
     "data": null,
     "timestamp": 1773210426208
-  },
-  "skillUsage": {
-    "tech-ops:spreelet-helper": {
-      "usageCount": 1,
-      "lastUsedAt": 1773215088741
-    }
   }
 }
