@@ -89,7 +89,7 @@ export function SpreeletCard({ resolved, onQuickOpen }: SpreeletCardProps) {
       <CardFooter className="gap-2">
         <Button asChild variant="default" size="sm">
           <a href={manifest.url} target="_blank" rel="noopener noreferrer">
-            Open
+            Launch
             <ArrowRight className="ml-1 h-4 w-4" />
           </a>
         </Button>
@@ -100,7 +100,7 @@ export function SpreeletCard({ resolved, onQuickOpen }: SpreeletCardProps) {
             onClick={() => onQuickOpen(resolved)}
           >
             <Zap className="mr-1 h-4 w-4" />
-            Quick open
+            Launch Spark
           </Button>
         )}
       </CardFooter>
