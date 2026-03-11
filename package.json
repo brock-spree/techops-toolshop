@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@spreetail/spreeform": "^0.1.1",
+    "@spreetail/spreelet-kit": "^0.1.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.20",
     "@tanstack/react-router": "^1.132.0",
